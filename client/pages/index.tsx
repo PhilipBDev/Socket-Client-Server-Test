@@ -8,12 +8,18 @@ import * as io from "socket.io-client";
 export default function Home() {
   const socket = io.connect("http://localhost:3001");
 
+  const [unconfirmedUser, setUnconfirmedUser] = useState("");
+  const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
+  const [receivedUsername, setReceivedUsername] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
-  
-  useEffect(() => {
+  const [mapMessage, setMapMessages] = useState(new Map());
+
+    useEffect(() => {
     socket.on("receive_message", (data) => {
-      setMessageReceived(data.message)
+      setReceivedUsername(data.username);
+      setMessageReceived(data.message);
+         // const userPost = `${data.username}: ${data.message}`;
     });
 
     return (() => {
@@ -22,9 +28,13 @@ export default function Home() {
     
   }, [socket])
 
-  
   const sendMessage = () => {
-    socket.emit("send_message", { message });
+
+    socket.emit("send_message", { 
+      username,
+      message 
+    });
+    setMessage("");
   }
 
   return (
@@ -37,15 +47,34 @@ export default function Home() {
 
       <main className={styles.main}>
 
+{!username ? (
+<>
+    <div>
+      <form>
+       <input onChange={(e) => (setUnconfirmedUser(e.target.value))} className="border border-black mr-2" placeholder='What is your username?' />
+       <button onClick={(e) => (setUsername(unconfirmedUser))} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button> 
+       </form>
+    </div>
+</>
+) : (
+  <>
       <div>
-        <input onChange={(e) => (setMessage(e.target.value))} className="border border-black mr-2" placeholder='Message' />
+        <input value={message} onChange={(e) => (setMessage(e.target.value))} className="border border-black mr-2" placeholder='Message' />
         <button onClick={sendMessage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Send</button>  
-        <h1 className="text-lg mt-3 pt-2 border-t-2 border-black">
-          Messages Received:
+        <h1 className="text-xl text- mt-3 mb-2 pt-2 border-t-2 border-black font-bold">
+          Messages Received
         </h1>
-        <p>{messageReceived}</p>
+      {!messageReceived ? (null) : (
+        <div className="flex">
+        <h2 className="text-red-500 font-bold">
+          {receivedUsername}</h2>
+        <p>: {messageReceived}</p>
+        </div>
+        )}
+
       </div>  
-      
+    </>
+   )}
 
       </main>
     </div>
