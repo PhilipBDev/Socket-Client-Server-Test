@@ -30,6 +30,7 @@ export default function Home() {
     }
 
     setChat([...chat, userPost])
+    setMessage('')
 
     socket.emit('send_message', {
       username,
@@ -71,6 +72,7 @@ export default function Home() {
           <>
             <div>
               <input
+                value={message}
                 onChange={e => setMessage(e.target.value)}
                 className='border border-black mr-2'
                 placeholder='Message'
