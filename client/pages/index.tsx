@@ -38,6 +38,17 @@ export default function Home() {
     })
   }
 
+  const handleKeyPress = e => {
+    if (e.keyCode === 13) {
+      if (message) {
+        sendMessage()
+      }
+    }
+  }
+
+  // Add ability to allow users to set own color
+  let userColor = 'text-blue-500'
+
   return (
     <div className={styles.container}>
       <Head>
@@ -74,6 +85,7 @@ export default function Home() {
               <input
                 value={message}
                 onChange={e => setMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
                 className='border border-black mr-2'
                 placeholder='Message'
               />
@@ -88,9 +100,9 @@ export default function Home() {
               </h1>
               {chat.map((data, index) => {
                 return (
-                  <h3 key={index}>
-                    {data.username}: <span>{data.message}</span>
-                  </h3>
+                  <p className={userColor} key={index}>
+                    {data.username}: {data.message}
+                  </p>
                 )
               })}
             </div>
