@@ -13,6 +13,9 @@ export default function Home() {
 
   const [chat, setChat] = useState([])
 
+  const colorOptions = ['black', 'blue', 'red', 'orange', 'pink']
+  const [color, setColor] = useState(colorOptions[0])
+
   useEffect(() => {
     socket.on('receive_message', data => {
       setChat([...chat, data])
@@ -27,6 +30,7 @@ export default function Home() {
     let userPost = {
       username: username,
       message: message,
+      color: color,
     }
 
     setChat([...chat, userPost])
@@ -35,6 +39,7 @@ export default function Home() {
     socket.emit('send_message', {
       username,
       message,
+      color,
     })
   }
 
@@ -45,9 +50,6 @@ export default function Home() {
       }
     }
   }
-
-  // Add ability to allow users to set own color
-  let userColor = 'text-blue-500'
 
   return (
     <div className={styles.container}>
@@ -82,6 +84,23 @@ export default function Home() {
         ) : (
           <>
             <div>
+              <form className='relative w-full lg:max-w-sm'>
+                <select
+                  className='w-full p-2.5 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600'
+                  value={color}
+                  onChange={e => setColor(e.target.value)}
+                >
+                  {colorOptions.map(value => (
+                    <option
+                      className={'text-' + value + '-500'}
+                      value={value}
+                      key={value}
+                    >
+                      {value.charAt(0).toUpperCase() + value.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </form>
               <input
                 value={message}
                 onChange={e => setMessage(e.target.value)}
@@ -100,7 +119,7 @@ export default function Home() {
               </h1>
               {chat.map((data, index) => {
                 return (
-                  <p className={userColor} key={index}>
+                  <p className={'text-' + data.color + '-500'} key={index}>
                     {data.username}: {data.message}
                   </p>
                 )
