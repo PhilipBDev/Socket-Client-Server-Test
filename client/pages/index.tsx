@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { Header } from '../components/Header'
 import styles from '../styles/Home.module.css'
 
 import { useState, useEffect } from 'react'
@@ -62,30 +63,33 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
+      <Header />
+
       <main className={styles.main}>
         {!username ? (
-          <>
+          <span className='bg-gray-400 p-20 rounded-lg'>
             <div>
               <form>
                 <input
                   onChange={e => setUnconfirmedUser(e.target.value)}
-                  className='border border-black mr-2'
+                  className='p-3 rounded mr-2 border border-black text-black'
                   placeholder='What is your username?'
                 />
                 <button
                   onClick={e => setUsername(unconfirmedUser)}
-                  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded'
                 >
                   Submit
                 </button>
               </form>
             </div>
-          </>
+          </span>
         ) : (
-          <>
+          <span className='bg-gray-400 p-20 rounded-lg'>
+            {' '}
             <div>
               <form className='relative w-full lg:max-w-sm'>
-                <select
+                {/* <select
                   className='w-full p-2.5 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600'
                   value={color}
                   onChange={e => setColor(e.target.value)}
@@ -99,33 +103,35 @@ export default function Home() {
                       {value.charAt(0).toUpperCase() + value.slice(1)}
                     </option>
                   ))}
-                </select>
+                </select> */}
               </form>
               <input
+                className='p-3 rounded mr-2 border border-black text-black'
                 value={message}
                 onChange={e => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
-                className='border border-black mr-2'
                 placeholder='Message'
               />
               <button
+                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded'
                 onClick={sendMessage}
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
               >
                 Send
               </button>
-              <h1 className='text-xl text- mt-3 mb-2 pt-2 border-t-2 border-black font-bold'>
-                Messages Received
+              <h1 className='text-xl text-gray-800 mt-10 mb-2 pt-10 border-t-2 border-white font-bold'>
+                Messages Received:
               </h1>
-              {chat.map((data, index) => {
-                return (
-                  <p className={'text-' + data.color + '-500'} key={index}>
-                    {data.username}: {data.message}
-                  </p>
-                )
-              })}
+              <div className='text-xl'>
+                {chat.map((data, index) => {
+                  return (
+                    <p className={'text-' + data.color + '-500'} key={index}>
+                      <strong>{data.username}</strong>: {data.message}
+                    </p>
+                  )
+                })}
+              </div>
             </div>
-          </>
+          </span>
         )}
       </main>
     </div>
