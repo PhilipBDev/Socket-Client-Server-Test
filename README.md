@@ -1,5 +1,1 @@
-Vibin'
-
-A simple app to learn how Socket.io and web sockets function. 
-
-Successfully able to communicate across multiple browsers.
+Testing socket.io with separate sever and client.
